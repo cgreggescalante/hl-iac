@@ -1,0 +1,25 @@
+- name: Setup PVE Nodes for Ansible orchestration
+  hosts: pve_nodes
+  become: yes
+  tasks:
+    - name: install sudo package
+      apt:
+        name: sudo
+        update_cache: yes
+        cache_valid_time: 3600
+        state: latest
+    - name: Create Ansible user
+      user:
+        name: ansible
+        shell: '/bin/bash'
+    - name: Add Ansible ssh key
+      authorized_key:
+        user: ansible
+        key: "{{ lookup('file', '/home/cge/.ssh/id_rsa.pub') }}"
+    - name: Add Ansible user to sudoers
+      copy:
+        src: sudoer_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: 0440
