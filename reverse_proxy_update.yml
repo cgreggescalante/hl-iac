@@ -1,0 +1,23 @@
+- name: Install Git
+  import_playbook: install_git.yml
+
+- name: Update Nginx Reverse Proxy
+  hosts: proxy_host
+  become: yes
+  tasks:
+    - name: Delete the old Nginx config
+      command: rm -rf /etc/nginx
+      ignore_errors: yes
+
+    - name: Pull latest Nginx config
+      git:
+        repo: 'https://github.com/cgreggescalante/nginx-reverse-proxy'
+        dest: /etc/nginx
+        version: master
+        force: yes
+
+    - name: Test Nginx config
+      command: nginx -t
+
+    - name: Reload Nginx
+      command: nginx -s reload

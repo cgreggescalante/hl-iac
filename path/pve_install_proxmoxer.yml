@@ -1,0 +1,12 @@
+- name: Install proxmoxer on PVE Nodes
+  hosts: pve_nodes
+  become: yes
+  tasks:
+    - name: Update repository cache
+      apt:
+          update_cache: yes
+          cache_valid_time: 3600
+    - name: Install proxmoxer
+      apt:
+        name: python3-proxmoxer
+        state: latest

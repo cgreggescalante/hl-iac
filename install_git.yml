@@ -1,0 +1,15 @@
+- name: Ensure git is installed
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check if Git is installed
+      command: git --version
+      register: git_installed
+      ignore_errors: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update-cache: yes
+      when: git_installed.failed

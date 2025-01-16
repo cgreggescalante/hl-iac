@@ -1,0 +1,25 @@
+- name: Setup PVE Nodes for Ansible orchestration
+  hosts: pve_nodes
+  become: yes
+  tasks:
+    - name: install sudo package
+      apt:
+        name: sudo
+        update_cache: yes
+        cache_valid_time: 3600
+        state: latest
+    - name: Create Ansible user
+      user:
+        name: ansible
+        shell: '/bin/bash'
+    - name: Add Ansible ssh key
+      authorized_key:
+        user: ansible
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC/MVTJieWqWxwLmU8bOiEWcY+MSuDwqkHTxpc7Xr3fa0a2g8HaTvTRqecr2DsLt/HLLAr832tR9V5k7QNgQWxtpdQAUKlfZ7T1QHJKfaI+Gr6Tmhdesrf+WjlYagBc7jJX9zezJr2LeZDiRGp+yEUY9OS6z3jywYFM/eikyQxUK8aYUDUyOvflVHhRwfEqNPfzN+De7K2+wioworasctC0fJTtDv5qHxY5spltx29D7ojOwhFsNBBBm7b6VpV8JKK4J9IEfWuzWh6t9GEAgpAhtbMRwrG90bTJjER+WwEH1OKx0tj8hH6tOkVvHz6xe7CKMiRMrNYt72Ys9oWnC2p4gpP23AeZjNheVy5awsq5pgK/OLaQumuIXCExXB4mukLUOXG9G8RAfUR2ALpzEotTP8lrWBmDiK1uQwqtFQre88CxQ9xQwD971dru3e7OEbzO1ETxwgdo1OwSnDfFvKDOb4QaNnvqXg3K/zWhRog6CbglwOB37Yt2zngYf2APmX8= cge@pop-os"
+    - name: Add Ansible user to sudoers
+      copy:
+        src: sudoer_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: 0440

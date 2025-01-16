@@ -1,0 +1,21 @@
+# WORKS
+- name: Create LXC Container
+  hosts: pve1
+  become: yes
+  tasks:
+    - name: Create LXC Container
+      community.general.proxmox:
+        node: pve1
+        api_user: ansible@pam
+        api_token_id: ansible-token
+        api_token_secret: 'c202b6de-130a-42b9-87fa-47494b5a4e28'
+        api_host: pve1
+        password: otherpass
+        cores: 1
+        memory: 1024
+        swap: 512
+        mounts: {rootfs: local-lvm:8}
+        hostname: lxc1
+        netif:
+          net0: "name=eth0,bridge=vmbr0"
+        ostemplate: 'local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz'

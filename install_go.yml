@@ -1,0 +1,2 @@
+- name: Install Go
+  hosts: web-servers
