@@ -1,5 +1,5 @@
 - name: Setup PVE Nodes for Ansible orchestration
-  hosts: pve_nodes
+  hosts: pve
   become: yes
   tasks:
     - name: install sudo package

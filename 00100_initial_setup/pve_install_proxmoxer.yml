@@ -1,5 +1,5 @@
 - name: Install proxmoxer on PVE Nodes
-  hosts: pve_nodes
+  hosts: pve
   become: yes
   tasks:
     - name: Update repository cache

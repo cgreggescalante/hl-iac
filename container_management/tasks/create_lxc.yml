@@ -1,0 +1,29 @@
+- name: Create LXC Container
+  community.general.proxmox:
+    node: "{{ node }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    api_host: "{{ api_host }}"
+    pubkey: "{{ pubkey }}"
+    password: "{{ node_password }}"
+    cores: "{{ cores }}"
+    memory: "{{ memory }}"
+    swap: "{{ swap }}"
+    mounts: { rootfs: "{{ rootfs }}" }
+    hostname: "{{ hostname }}"
+    netif:
+      net0: "{{ net0 }}"
+    ostemplate: "{{ ostemplate }}"
+    state: present
+  register: lxc_create_result
+
+- name: Wait for LXC Container to be created
+  community.general.proxmox:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    vmid: "{{ lxc_create_result.vmid }}"
+    state: started
+  when: lxc_create_result.changed
