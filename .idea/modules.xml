@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/hl-ansible.iml" filepath="$PROJECT_DIR$/hl-ansible.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hl-iac.iml" filepath="$PROJECT_DIR$/hl-iac.iml" />
     </modules>
   </component>
 </project>
