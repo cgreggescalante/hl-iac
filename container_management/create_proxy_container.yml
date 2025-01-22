@@ -2,13 +2,14 @@
   hosts: pve1
   become: true
   vars_files:
-    - secrets.yml
+    - ../secrets.yml
   vars:
     node: pve1
     api_user: ansible@pam
     api_token_id: ansible-token
     api_host: pve1
     cores: 1
+    vmid: 100
     memory: 1024
     swap: 512
     rootfs: local-lvm:8
@@ -16,6 +17,8 @@
     net0: "name=eth0,bridge=vmbr0,ip=192.168.33.100/24,gw=192.168.33.1"
     ostemplate: 'local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz'
   tasks:
+    - debug:
+        var: api_token_secret
     - name: Create LXC Container
       import_tasks: tasks/create_lxc.yml
 
@@ -38,7 +41,6 @@
     - name: Add Nginx User
       user:
         name: nginx
-        password: "{{ node_password }}"
 
     - name: Ensure Nginx is running
       service:

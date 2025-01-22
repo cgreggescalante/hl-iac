@@ -1,6 +1,6 @@
+# Must be run with -k and --user=root
 - name: Setup PVE Nodes for Ansible orchestration
   hosts: pve
-  become: yes
   tasks:
     - name: install sudo package
       apt:
