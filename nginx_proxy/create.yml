@@ -31,25 +31,24 @@
       - domain: "cgreggescalante.com"
         host: 192.168.33.101
   tasks:
-#    - name: Install Dependencies
-#      apt:
-#        name:
-#          - git
-#          - nginx
-#          - certbot
-#          - python3-certbot-nginx
-#        state: present
-#        update_cache: yes
+    - name: Install Dependencies
+      apt:
+        name:
+          - nginx
+          - certbot
+          - python3-certbot-nginx
+        state: present
+        update_cache: yes
 
-#    - name: Add Nginx User
-#      user:
-#        name: nginx
-#
-#    - name: Ensure Nginx is running
-#      service:
-#        name: nginx
-#        state: started
-#        enabled: yes
+    - name: Add Nginx User
+      user:
+        name: nginx
+
+    - name: Ensure Nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
 
     - name: Update SSL certificate if needed
       command: "certbot certonly --keep-until-expiring --nginx -d {{ item.domain }} --email {{ email }} --agree-tos --non-interactive"
