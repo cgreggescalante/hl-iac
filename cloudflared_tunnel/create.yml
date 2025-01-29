@@ -1,0 +1,30 @@
+- name: Create LXC Container for Cloudflared Tunnel
+  hosts: pve1
+  become: true
+  vars_files:
+    - ../secrets.yml
+  vars:
+    node: pve1
+    api_user: ansible@pam
+    api_token_id: ansible-token
+    api_host: pve1
+    cores: 1
+    vmid: 100
+    memory: 1024
+    swap: 512
+    rootfs: local-lvm:8
+    hostname: cloudflared-tunnel
+    net0: "name=eth0,bridge=vmbr0,ip=192.168.33.100/24,gw=192.168.33.1"
+    ostemplate: 'local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz'
+  tasks:
+    - name: Create LXC Container
+      import_tasks: ../tasks/create_lxc.yml
+
+- name: Install Cloudflared Tunnel
+  hosts: cloudflared-tunnel
+  become: true
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Install Cloudflared Tunnel
+      shell: "wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && dpkg -i cloudflared-linux-amd64.deb && cloudflared service install eyJhIjoiYjczNjAyNTUxYzdkNDUyODdhZGVlNzBlNGFmNTllZWMiLCJ0IjoiNzRhYjc2ZDEtMzI4ZC00YmU5LTg2N2EtNDc0NDZjMzk2N2RkIiwicyI6Ik9EUmtNbVEyTkdVdFpHVTJaQzAwTkRBMUxUbGtNamd0WkRCbU5XSXhaR1pqTUdSbSJ9"
