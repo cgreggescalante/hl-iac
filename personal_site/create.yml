@@ -1,0 +1,73 @@
+- name: Create LXC Container for Personal Site
+  hosts: pve1
+  become: true
+  vars_files:
+    - ../secrets.yml
+  vars:
+    node: pve1
+    api_user: ansible@pam
+    api_token_id: ansible-token
+    api_host: pve1
+    cores: 1
+    vmid: 101
+    memory: 1024
+    swap: 512
+    rootfs: local-lvm:8
+    hostname: personal-site
+    net0: "name=eth0,bridge=vmbr0,ip=192.168.33.101/24,gw=192.168.33.1"
+    ostemplate: 'local:vztmpl/ubuntu-20.04-standard_20.04-1_amd64.tar.gz'
+  tasks:
+    - name: Create LXC Container
+      import_tasks: ../tasks/create_lxc.yml
+
+- name: Install Personal Site
+  hosts: personal-site
+  become: true
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Download go
+      command: wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
+
+    - name: Extract to /usr/local
+      command: tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
+
+    - name: Delete tar
+      command: rm -rf go1.23.5.linux-amd64.tar.gz
+
+    - name: Add to go to path
+      lineinfile:
+        path: ~/.profile
+        line: 'export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"'
+        create: true
+        owner: root
+        group: root
+        mode: 'u=rwx,go=rx'
+        state: present
+    - name: Install Dependencies
+      apt:
+        name:
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Pull latest content
+      git:
+        repo: 'https://github.com/cgreggescalante/cgreggescalante'
+        dest: sources/
+        version: master
+        force: yes
+
+    - name: Get Dependencies
+      shell: cd sources && /usr/local/go/bin/go mod tidy
+
+    - name: Build project
+      shell: cd sources && /usr/local/go/bin/go build main.go
+
+    - name: Add go-service.service
+      copy:
+        src: go-service.service
+        dest: /etc/systemd/system/go-service.service
+
+    - name: Enable service
+      shell: systemctl daemon-reload && systemctl start go-service

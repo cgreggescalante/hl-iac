@@ -1,4 +1,0 @@
-- name: Request SSL certificate if not exists
-  command: "certbot certonly --keep-until-expiring --nginx -d {{ domain }} --email {{ email }} --agree-tos --non-interactive"
-  register: certbot_result
-  failed_when: "'Congratulations' not in certbot_result.stdout"

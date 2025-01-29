@@ -1,0 +1,13 @@
+[Unit]
+Description=Go web server for cgreggescalante.com
+After=network.target
+
+[Service]
+ExecStart=/root/sources/main
+WorkingDirectory=/root/sources/
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=default.target

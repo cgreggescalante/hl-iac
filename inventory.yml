@@ -15,11 +15,8 @@ all:
     lxc:
       vars:
         ansible_connection: community.general.proxmox_pct_remote
-        ansible_user: ansible
+        ansible_user: root
       hosts:
-        reverse-proxy:
-          ansible_host: 192.168.33.51
-          proxmox_vmid: 100
-        other-container:
+        personal-site:
           ansible_host: 192.168.33.51
           proxmox_vmid: 101
