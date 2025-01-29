@@ -3,6 +3,7 @@
   become: true
   vars_files:
     - ../secrets.yml
+  gather_facts: false
   vars:
     node: pve1
     api_user: ansible@pam
@@ -25,6 +26,7 @@
   become: true
   vars_files:
     - secrets.yml
+  gather_facts: false
   tasks:
     - name: Install Cloudflared Tunnel
       shell: "wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && dpkg -i cloudflared-linux-amd64.deb && cloudflared service install eyJhIjoiYjczNjAyNTUxYzdkNDUyODdhZGVlNzBlNGFmNTllZWMiLCJ0IjoiNzRhYjc2ZDEtMzI4ZC00YmU5LTg2N2EtNDc0NDZjMzk2N2RkIiwicyI6Ik9EUmtNbVEyTkdVdFpHVTJaQzAwTkRBMUxUbGtNamd0WkRCbU5XSXhaR1pqTUdSbSJ9"
