@@ -28,14 +28,12 @@
     - secrets.yml
   gather_facts: false
   tasks:
-    - name: Download go
-      command: wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
-
-    - name: Extract to /usr/local
-      command: tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
-
-    - name: Delete tar
-      command: rm -rf go1.23.5.linux-amd64.tar.gz
+    - name: Install Go
+      command: "{{ item }}"
+      with_items:
+        - "wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz"
+        - "tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz"
+        - "rm -rf go1.23.5.linux-amd64.tar.gz"
 
     - name: Install Dependencies
       apt:
